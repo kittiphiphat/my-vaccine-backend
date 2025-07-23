@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "booking_settings",
+  "info": {
+    "singularName": "booking-setting",
+    "pluralName": "booking-settings",
+    "displayName": "booking_setting",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "advance_booking_days": {
+      "type": "integer",
+      "required": true
+    },
+    "prevent_last_minute_minutes": {
+      "type": "integer",
+      "required": true
+    },
+    "is_enabled": {
+      "type": "boolean",
+      "default": true,
+      "required": true
+    },
+    "vaccine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vaccine.vaccine",
+      "inversedBy": "booking_settings"
+    },
+    "slotDurationMinutes": {
+      "type": "integer",
+      "default": 30,
+      "required": true
+    }
+  }
+}

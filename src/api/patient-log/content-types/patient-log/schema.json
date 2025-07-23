@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "patient_logs",
+  "info": {
+    "singularName": "patient-log",
+    "pluralName": "patient-logs",
+    "displayName": "Patient Log",
+    "description": "Logs for patient activities"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "action": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "booking_created",
+        "booking_cancelled",
+        "patient_created",
+        "patient_updated",
+        "login",
+        "logout",
+        "password_changed",
+        "profile_updated"
+      ]
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "timestamp": {
+      "type": "datetime",
+      "required": true,
+      "default": {
+        "$dbFunction": "now"
+      }
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "patient_log"
+    }
+  }
+}
