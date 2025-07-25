@@ -18,11 +18,8 @@
         "booking_created",
         "booking_cancelled",
         "patient_created",
-        "patient_updated",
         "login",
-        "logout",
-        "password_changed",
-        "profile_updated"
+        "logout"
       ]
     },
     "message": {
@@ -36,11 +33,27 @@
         "$dbFunction": "now"
       }
     },
+    "details": {
+    "type": "json",
+    "required": false
+    },
+    "type": {
+      "type": "string",
+      "required": false,
+      "enum": [
+        "create",
+        "update",
+        "delete",
+        "login",
+        "logout"
+
+      ]
+    },
     "user": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "mappedBy": "patient_log"
+      "inversedBy": "patient_logs"
     }
   }
 }

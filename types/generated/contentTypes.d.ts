@@ -382,6 +382,7 @@ export interface ApiAdminLogAdminLog extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+    details: Attribute.JSON;
     message: Attribute.Text & Attribute.Required;
     timestamp: Attribute.DateTime &
       Attribute.Required &
@@ -398,7 +399,7 @@ export interface ApiAdminLogAdminLog extends Schema.CollectionType {
       Attribute.Private;
     user: Attribute.Relation<
       'api::admin-log.admin-log',
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -502,12 +503,14 @@ export interface ApiPatientLogPatientLog extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
+    details: Attribute.JSON;
     message: Attribute.Text & Attribute.Required;
     timestamp: Attribute.DateTime &
       Attribute.Required &
       Attribute.DefaultTo<{
         $dbFunction: 'now';
       }>;
+    type: Attribute.String;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::patient-log.patient-log',
@@ -517,7 +520,7 @@ export interface ApiPatientLogPatientLog extends Schema.CollectionType {
       Attribute.Private;
     user: Attribute.Relation<
       'api::patient-log.patient-log',
-      'oneToOne',
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -551,8 +554,6 @@ export interface ApiPatientPatient extends Schema.CollectionType {
     is_verified: Attribute.Boolean;
     last_name: Attribute.String & Attribute.Required;
     phone: Attribute.String;
-    status: Attribute.Enumeration<['active', 'deleted']> &
-      Attribute.DefaultTo<'active'>;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::patient.patient',
@@ -561,11 +562,6 @@ export interface ApiPatientPatient extends Schema.CollectionType {
     > &
       Attribute.Private;
     user: Attribute.Relation<
-      'api::patient.patient',
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-    users_permissions_user: Attribute.Relation<
       'api::patient.patient',
       'oneToOne',
       'plugin::users-permissions.user'
@@ -1160,9 +1156,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
     draftAndPublish: false;
   };
   attributes: {
-    admin_log: Attribute.Relation<
+    admin_logs: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'oneToMany',
       'api::admin-log.admin-log'
     >;
     blocked: Attribute.Boolean & Attribute.DefaultTo<false>;
@@ -1175,18 +1171,11 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'admin::user'
     > &
       Attribute.Private;
-    deleted_at: Attribute.DateTime;
-    deleted_by: Attribute.Relation<
-      'plugin::users-permissions.user',
-      'manyToOne',
-      'plugin::users-permissions.user'
-    >;
     email: Attribute.Email &
       Attribute.Required &
       Attribute.SetMinMaxLength<{
         minLength: 6;
       }>;
-    is_deleted: Attribute.Boolean & Attribute.DefaultTo<false>;
     password: Attribute.Password &
       Attribute.Private &
       Attribute.SetMinMaxLength<{
@@ -1197,9 +1186,9 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'oneToOne',
       'api::patient.patient'
     >;
-    patient_log: Attribute.Relation<
+    patient_logs: Attribute.Relation<
       'plugin::users-permissions.user',
-      'oneToOne',
+      'oneToMany',
       'api::patient-log.patient-log'
     >;
     provider: Attribute.String;

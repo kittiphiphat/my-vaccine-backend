@@ -52,21 +52,27 @@ module.exports = {
           action: 'login',
           type: 'login',
           message: `ผู้ดูแลระบบ ${user.username} ทำการล็อกอิน`,
-          user,
+          user: {
+          id: user?.id,
+        },
         });
       } else if (roleName === 'patient') {
         await patientLogHelper({
           action: 'login',
           type: 'login',
           message: `ผู้ป่วย ${user.username} ทำการล็อกอิน`,
-          user,
+          user: {
+          id: user?.id,
+        },
         });
       } else {
         await adminLogHelper({
           action: 'login',
           type: 'login',
           message: `ผู้ใช้ ${user.username} (role: ${roleName}) ทำการล็อกอิน`,
-          user,
+          user: {
+          id: user?.id,
+        },
         });
       }
     } catch (err) {
@@ -115,21 +121,27 @@ module.exports = {
             action: 'logout',
             type: 'logout',
             message: `ผู้ดูแลระบบ ${user.username} ออกจากระบบ`,
-            user,
+            user: {
+          id: user?.id,
+        },
           });
         } else if (roleName === 'patient') {
           await patientLogHelper({
             action: 'logout',
             type: 'logout',
             message: `ผู้ป่วย ${user.username} ออกจากระบบ`,
-            user,
+            user: {
+          id: user?.id,
+        },
           });
         } else {
           await adminLogHelper({
             action: 'logout',
             type: 'logout',
             message: `ผู้ใช้ ${user.username} (role: ${roleName}) ออกจากระบบ`,
-            user,
+            user: {
+          id: user?.id,
+        },
           });
         }
       } else {

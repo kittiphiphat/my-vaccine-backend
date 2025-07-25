@@ -40,14 +40,7 @@
         "other"
       ]
     },
-    "status": {
-      "type": "enumeration",
-      "enum": [
-        "active",
-        "deleted"
-      ],
-      "default": "active"
-    },
+
     "email": {
       "type": "string",
       "required": true
@@ -66,12 +59,6 @@
       "relation": "oneToMany",
       "target": "api::vaccine-booking.vaccine-booking",
       "mappedBy": "patient"
-    },
-    "users_permissions_user": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "patient"
     }
   }
 }

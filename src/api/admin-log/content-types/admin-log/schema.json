@@ -27,13 +27,11 @@
         "vaccine_service_day_created",
         "vaccine_service_day_updated",
         "vaccine_service_day_deleted",
-        "patient_created",
         "patient_updated",
         "patient_deleted",
-        "user_created",
-        "user_updated",
         "user_deleted",
-        "booking_detail_updated",
+        "hospitel_detail_created",
+        "hospitel_detail_updated",
         "login",
         "logout"
       ]
@@ -46,8 +44,8 @@
         "update",
         "delete",
         "login",
-        "logout",
-        "other"
+        "logout"
+
       ]
     },
     "message": {
@@ -61,11 +59,15 @@
         "$dbFunction": "now"
       }
     },
+    "details": {
+    "type": "json",
+    "required": false
+    },
     "user": {
       "type": "relation",
-      "relation": "oneToOne",
+      "relation": "manyToOne",
       "target": "plugin::users-permissions.user",
-      "mappedBy": "admin_log"
+      "inversedBy": "admin_logs"
     }
   }
 }

@@ -65,41 +65,30 @@
       "inversedBy": "users",
       "configurable": false
     },
-    "is_deleted": {
-      "type": "boolean",
-      "default": false
-    },
-    "deleted_at": {
-      "type": "datetime"
-    },
-    "deleted_by": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user"
-    },
+
     "vaccine_bookings": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::vaccine-booking.vaccine-booking",
       "mappedBy": "users_permissions_user"
     },
+    "admin_logs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::admin-log.admin-log",
+      "mappedBy": "user"
+    },
+    "patient_logs": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::patient-log.patient-log",
+      "mappedBy": "user"
+    },
     "patient": {
       "type": "relation",
       "relation": "oneToOne",
       "target": "api::patient.patient",
-      "mappedBy": "users_permissions_user"
-    },
-    "admin_log": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::admin-log.admin-log",
-      "inversedBy": "user"
-    },
-    "patient_log": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::patient-log.patient-log",
-      "inversedBy": "user"
+      "mappedBy": "user"
     }
   }
 }
