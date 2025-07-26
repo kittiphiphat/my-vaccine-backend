@@ -13,6 +13,7 @@ module.exports = async ({ action, message, user ,type = 'other'}) => {
       message: `${message} (บันทึกเมื่อ ${formattedDate})`,
       user: user?.id ,
       timestamp: now.toISOString(),
+      details: details || {},
     },
   });
 };

@@ -5,14 +5,14 @@ const adminLogHelper = require('../../../utils/adminLogHelper');
 
 module.exports = createCoreController('api::vaccine-service-day.vaccine-service-day', ({ strapi }) => ({
 
-  async create(ctx) {
+ async create(ctx) {
     const user = ctx.state.user;
-    const { date, vaccine } = ctx.request.body.data || ctx.request.body;
+    const { day_of_week, vaccine } = ctx.request.body.data || ctx.request.body;
 
     // ตรวจสอบว่ามีวันให้บริการนี้กับวัคซีนนี้แล้วหรือยัง
     const existing = await strapi.db.query('api::vaccine-service-day.vaccine-service-day').findOne({
       where: {
-        date,
+        day_of_week: { $in: day_of_week }, // ✅ ใช้ $in เพราะเป็น array
         vaccine: vaccine?.id || vaccine,
       },
     });
@@ -24,7 +24,7 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
     // สร้างวันให้บริการ
     const response = await strapi.service('api::vaccine-service-day.vaccine-service-day').create({
       data: {
-        date,
+        day_of_week,
         vaccine: vaccine?.id || vaccine,
       },
       populate: ['vaccine'],
@@ -45,6 +45,7 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
 
     return response;
   },
+
 
   async update(ctx) {
     const user = ctx.state.user;

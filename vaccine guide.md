@@ -12,7 +12,7 @@
 
 ---
 
-## 2. สร้างโปรเจกต์ Strapi (v4.25.19)
+## 2. สร้างโปรเจกต์ Strapi (v4.25.19) ใหม่ 
 
 ```bash
 npx create-strapi-app@4.25.19 my-strapi-project --quickstart
@@ -29,10 +29,13 @@ Settings -> advanced-settings -> Default role for authenticated users ->Patient
   
 
 4. ตั้งค่า .env.local สำหรับ Next.js
-env
+env ใช้ run ปกติ
 NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
 NEXT_PUBLIC_SOCKET_IO_URL=http://localhost:4000
 
+ใช้สำคัญ build docker
+NEXT_PUBLIC_STRAPI_URL=http://strapi:1337
+NEXT_PUBLIC_SOCKET_IO_URL=http://strapi:4000
 
 
 

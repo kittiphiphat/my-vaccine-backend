@@ -30,6 +30,7 @@ module.exports = (plugin) => {
     return {
       id: user.id,
       username: user.username,
+      email: user.email,
       role: {
         type: user.role?.type || null,
       },

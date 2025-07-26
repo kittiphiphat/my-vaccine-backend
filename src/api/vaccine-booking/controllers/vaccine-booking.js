@@ -124,19 +124,33 @@ module.exports = createCoreController('api::vaccine-booking.vaccine-booking', ({
         const roleName = user.role?.name?.toLowerCase();
         const formattedDate = `${dayjs(bookingDate).format('D MMM YYYY')} เวลา ${formattedStartTime} - ${formattedEndTime} น.`;
 
-        if (roleName === 'patient') {
-          await patientLogHelper({
-            action: 'booking_created',
-            message: `ผู้ใช้ชื่อ ${user.username} ทำการจองวัคซีน "${vaccineEntity.title}" ในวันที่ ${formattedDate}`,
-            user,
-          });
-        } else if (roleName === 'admin') {
-          await adminLogHelper({
-            action: 'booking_created',
-            message: `แอดมินชื่อ ${user.username} สร้างการจองวัคซีน "${vaccineEntity.title}" ให้ผู้ป่วย ID ${patient} ในวันที่ ${formattedDate}`,
-            user,
-          });
-        }
+        const logDetails = {
+          before: null,
+          after: {
+            bookingId: result.id,
+            vaccineId: vaccineEntity.id,
+            patientId: patient,
+            bookingDate,
+            startTime: formattedStartTime,
+            endTime: formattedEndTime,
+            vaccineTitle: vaccineEntity.title,
+          },
+        };
+
+        const message = `${roleName === 'admin' ? 'แอดมิน' : 'ผู้ใช้'}ชื่อ ${user.username} ${
+          roleName === 'admin' ? `สร้างการจองวัคซีน "${vaccineEntity.title}" ให้ผู้ป่วย ID ${patient}` :
+          `ทำการจองวัคซีน "${vaccineEntity.title}" ในวันที่ ${formattedDate}`
+        }`;
+
+        const logFn = roleName === 'admin' ? adminLogHelper : patientLogHelper;
+
+        await logFn({
+          action: 'booking_created',
+          type: 'create',
+          message,
+          user,
+          details: logDetails,
+        });
 
         ctx.status = 200;
         return ctx.send({ message: 'สร้างใบนัดสำเร็จ', data: result });
@@ -188,19 +202,34 @@ module.exports = createCoreController('api::vaccine-booking.vaccine-booking', ({
         const roleName = user.role?.name?.toLowerCase();
         const formattedDate = `${dayjs(booking.bookingDate).format('D MMM YYYY')}`;
 
-        if (roleName === 'patient') {
-          await patientLogHelper({
-            action: 'booking_cancelled',
-            message: `ผู้ใช้ชื่อ ${user.username} ยกเลิกการจองวัคซีน "${booking.vaccine?.title}" วันที่ ${formattedDate}`,
-            user,
-          });
-        } else if (roleName === 'admin') {
-          await adminLogHelper({
-            action: 'booking_cancelled',
-            message: `แอดมินชื่อ ${user.username} ยกเลิกการจองวัคซีน "${booking.vaccine?.title}" ให้ผู้ป่วย ID ${booking.patient}`,
-            user,
-          });
-        }
+        const logDetails = {
+          before: {
+            bookingId: booking.id,
+            vaccineId: booking.vaccine?.id,
+            patientId: booking.patient,
+            bookingDate: booking.bookingDate,
+            startTime: booking.startTime,
+            endTime: booking.endTime,
+            status: booking.status,
+            vaccineTitle: booking.vaccine?.title,
+          },
+          after: {
+            ...booking,
+            status: 'cancelled',
+          },
+        };
+
+        const message = `${roleName === 'admin' ? 'แอดมิน' : 'ผู้ใช้'}ชื่อ ${user.username} ยกเลิกการจองวัคซีน "${booking.vaccine?.title}" วันที่ ${formattedDate}`;
+
+        const logFn = roleName === 'admin' ? adminLogHelper : patientLogHelper;
+
+        await logFn({
+          action: 'booking_cancelled',
+          type: 'update',
+          message,
+          user,
+          details: logDetails,
+        });
 
         ctx.status = 200;
         return ctx.send({ message: 'ยกเลิกนัดเรียบร้อยแล้ว', data: updated });
@@ -220,14 +249,12 @@ module.exports = createCoreController('api::vaccine-booking.vaccine-booking', ({
 
 }));
 
-// Helper: ตรวจสอบและแปลงเวลาเป็น HH:mm
 function formatTime(time) {
   const timeRegex = /^([0-9]{2}):([0-9]{2})$/;
   const match = time.match(timeRegex);
   return match ? `${match[1]}:${match[2]}` : null;
 }
 
-// Helper: Retry transaction สำหรับ deadlock
 async function retryTransaction(fn, retries = 5) {
   let lastError;
   for (let i = 0; i < retries; i++) {

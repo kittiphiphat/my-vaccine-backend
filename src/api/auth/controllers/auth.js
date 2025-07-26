@@ -43,8 +43,14 @@ module.exports = {
       path: '/',
     });
 
-    // แยก log ตาม role
-    const roleName = user.role?.name ? user.role.name.toLowerCase() : '';
+    // Logging
+    const roleName = user.role?.name?.toLowerCase() || '';
+    const logDetails = {
+      userId: user.id,
+      username: user.username,
+      email: user.email,
+      role: roleName,
+    };
 
     try {
       if (roleName === 'admin') {
@@ -52,27 +58,24 @@ module.exports = {
           action: 'login',
           type: 'login',
           message: `ผู้ดูแลระบบ ${user.username} ทำการล็อกอิน`,
-          user: {
-          id: user?.id,
-        },
+          user: { id: user.id },
+          details: logDetails,
         });
       } else if (roleName === 'patient') {
         await patientLogHelper({
           action: 'login',
           type: 'login',
           message: `ผู้ป่วย ${user.username} ทำการล็อกอิน`,
-          user: {
-          id: user?.id,
-        },
+          user: { id: user.id },
+          details: logDetails,
         });
       } else {
         await adminLogHelper({
           action: 'login',
           type: 'login',
           message: `ผู้ใช้ ${user.username} (role: ${roleName}) ทำการล็อกอิน`,
-          user: {
-          id: user?.id,
-        },
+          user: { id: user.id },
+          details: logDetails,
         });
       }
     } catch (err) {
@@ -101,7 +104,7 @@ module.exports = {
           populate: ['role'],
         });
       } catch (err) {
-        // token invalid or expired
+
       }
     }
 
@@ -115,33 +118,37 @@ module.exports = {
 
     try {
       if (user) {
-        const roleName = user.role?.name ? user.role.name.toLowerCase() : '';
+        const roleName = user.role?.name?.toLowerCase() || '';
+        const logDetails = {
+          userId: user.id,
+          username: user.username,
+          email: user.email,
+          role: roleName,
+        };
+
         if (roleName === 'admin') {
           await adminLogHelper({
             action: 'logout',
             type: 'logout',
             message: `ผู้ดูแลระบบ ${user.username} ออกจากระบบ`,
-            user: {
-          id: user?.id,
-        },
+            user: { id: user.id },
+            details: logDetails,
           });
         } else if (roleName === 'patient') {
           await patientLogHelper({
             action: 'logout',
             type: 'logout',
             message: `ผู้ป่วย ${user.username} ออกจากระบบ`,
-            user: {
-          id: user?.id,
-        },
+            user: { id: user.id },
+            details: logDetails,
           });
         } else {
           await adminLogHelper({
             action: 'logout',
             type: 'logout',
             message: `ผู้ใช้ ${user.username} (role: ${roleName}) ออกจากระบบ`,
-            user: {
-          id: user?.id,
-        },
+            user: { id: user.id },
+            details: logDetails,
           });
         }
       } else {
@@ -149,6 +156,7 @@ module.exports = {
           action: 'logout',
           type: 'logout',
           message: 'ไม่สามารถระบุผู้ใช้ที่ออกระบบได้',
+          details: { reason: 'token invalid or expired' },
         });
       }
     } catch (err) {
