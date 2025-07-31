@@ -1,0 +1,34 @@
+services:
+  strapi:
+    build:
+      context: ./my-vaccine-backend
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: /app/.tmp/data.db
+      APP_KEYS: your_app_keys_here
+      API_TOKEN_SALT: your_api_token_salt
+      ADMIN_JWT_SECRET: your_admin_jwt_secret
+      JWT_SECRET: your_jwt_secret
+    volumes:
+      - ./my-vaccine-backend:/app
+      - ./my-vaccine-backend/app-data:/app/.tmp
+    ports:
+      - "1337:1337"
+    restart: unless-stopped
+
+  nextjs:
+    build:
+      context: ./my-vaccine-frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./my-vaccine-frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_STRAPI_URL: http://localhost:1337
+      NEXT_PUBLIC_SOCKET_IO_URL: http://localhost:4000
+    restart: unless-stopped
