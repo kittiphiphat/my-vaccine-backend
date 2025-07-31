@@ -554,6 +554,8 @@ export interface ApiPatientPatient extends Schema.CollectionType {
     is_verified: Attribute.Boolean;
     last_name: Attribute.String & Attribute.Required;
     phone: Attribute.String;
+    status: Attribute.Enumeration<['confirmed', 'cancelled']> &
+      Attribute.DefaultTo<'confirmed'>;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'api::patient.patient',
@@ -1198,6 +1200,7 @@ export interface PluginUsersPermissionsUser extends Schema.CollectionType {
       'manyToOne',
       'plugin::users-permissions.role'
     >;
+    status: Attribute.Enumeration<['confirmed', 'cancelled']>;
     updatedAt: Attribute.DateTime;
     updatedBy: Attribute.Relation<
       'plugin::users-permissions.user',

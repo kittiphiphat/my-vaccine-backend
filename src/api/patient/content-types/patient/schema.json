@@ -40,7 +40,6 @@
         "other"
       ]
     },
-
     "email": {
       "type": "string",
       "required": true
@@ -59,6 +58,14 @@
       "relation": "oneToMany",
       "target": "api::vaccine-booking.vaccine-booking",
       "mappedBy": "patient"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "confirmed",
+        "cancelled"
+      ],
+      "default": "confirmed"
     }
   }
 }

@@ -1,14 +1,12 @@
 module.exports = {
   routes: [
     {
-      method: 'DELETE',
-      path: '/users/:id',
-      handler: 'user.delete',
+      method: 'GET',
+      path: '/user/me',
+      handler: 'user.me',
       config: {
-        policies: [],
-        middlewares: [],
+        auth: false,
       },
     },
-    // ... routes อื่นๆ ...
   ],
 };

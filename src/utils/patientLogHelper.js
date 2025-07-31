@@ -2,7 +2,7 @@ const dayjs = require('dayjs');
 require('dayjs/locale/th');
 dayjs.locale('th');
 
-module.exports = async ({ action, message, user ,type = 'other'}) => {
+module.exports = async ({ action, message, user ,type, details}) => {
   const now = dayjs();
   const formattedDate = now.format('D MMM YYYY เวลา HH:mm');
 

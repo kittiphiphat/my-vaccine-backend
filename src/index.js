@@ -25,7 +25,7 @@ module.exports = {
 
     // เมื่อ client เชื่อมต่อ
     io.on('connection', (socket) => {
-      console.log('✅ Socket connected:', socket.id);
+      console.log('🚀 Socket connected:', socket.id);
 
       // ตัวอย่าง event ฟังจาก client
       socket.on('message', (data) => {

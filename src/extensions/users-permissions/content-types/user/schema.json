@@ -65,7 +65,6 @@
       "inversedBy": "users",
       "configurable": false
     },
-
     "vaccine_bookings": {
       "type": "relation",
       "relation": "oneToMany",
@@ -89,6 +88,13 @@
       "relation": "oneToOne",
       "target": "api::patient.patient",
       "mappedBy": "user"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "confirmed",
+        "cancelled"
+      ]
     }
   }
 }

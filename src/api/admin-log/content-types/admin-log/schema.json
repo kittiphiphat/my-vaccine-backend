@@ -45,7 +45,6 @@
         "delete",
         "login",
         "logout"
-
       ]
     },
     "message": {
@@ -60,8 +59,8 @@
       }
     },
     "details": {
-    "type": "json",
-    "required": false
+      "type": "json",
+      "required": false
     },
     "user": {
       "type": "relation",

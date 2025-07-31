@@ -34,8 +34,8 @@
       }
     },
     "details": {
-    "type": "json",
-    "required": false
+      "type": "json",
+      "required": false
     },
     "type": {
       "type": "string",
@@ -46,7 +46,6 @@
         "delete",
         "login",
         "logout"
-
       ]
     },
     "user": {
