@@ -21,6 +21,7 @@ module.exports = async ({ action, type, message, user, details }) => {
         details: details || {},
       },
     });
+
   } catch (error) {
     console.error('❌ adminLogHelper: เกิดข้อผิดพลาดขณะบันทึก log', error);
   }

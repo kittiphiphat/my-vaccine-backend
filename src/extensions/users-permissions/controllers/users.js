@@ -1,3 +1,5 @@
+const adminLogHelper = require('../helpers/adminLogHelper');
+
 module.exports = {
   async me(ctx) {
     try {
@@ -14,9 +16,9 @@ module.exports = {
         .verify(jwt);
 
       const user = await strapi.query('plugin::users-permissions.user').findOne({
-      where: { id: decoded.id },
-      populate: ['role'],
-    });
+        where: { id: decoded.id },
+        populate: ['role'],
+      });
 
       if (!user) {
         ctx.status = 404;
@@ -24,7 +26,7 @@ module.exports = {
         return;
       }
 
-      console.log('✅ Loaded user with role:', user);
+
 
       ctx.body = {
         id: user.id,
@@ -38,4 +40,6 @@ module.exports = {
       ctx.body = { error: 'Internal server error' };
     }
   },
+
+
 };
