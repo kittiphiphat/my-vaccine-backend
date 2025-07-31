@@ -29,7 +29,6 @@
         "vaccine_service_day_deleted",
         "patient_updated",
         "patient_deleted",
-        "user_deleted",
         "hospitel_detail_created",
         "hospitel_detail_updated",
         "login",
