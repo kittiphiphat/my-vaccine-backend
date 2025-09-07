@@ -23,9 +23,6 @@
       "type": "date",
       "required": true
     },
-    "age": {
-      "type": "integer"
-    },
     "phone": {
       "type": "string"
     },
@@ -49,9 +46,6 @@
       "relation": "oneToOne",
       "target": "plugin::users-permissions.user",
       "inversedBy": "patient"
-    },
-    "is_verified": {
-      "type": "boolean"
     },
     "vaccine_bookings": {
       "type": "relation",

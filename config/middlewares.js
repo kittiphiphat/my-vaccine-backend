@@ -9,18 +9,16 @@ module.exports = [
       credentials: true,
     },
   },
+  {
+  name: 'global::jwtFromCookie'
+  },
   'strapi::security',
   'strapi::poweredBy',
   'strapi::query',
   'strapi::body',
   'strapi::session',
-
-  // **สำคัญ: ให้ middleware ดึง JWT อยู่ก่อน public และ permission**
-  {
-  name: 'global::jwtFromCookie'
-},
-
-
   'strapi::favicon',
-  'strapi::public',  // permission middleware อยู่ในนี้
+  'strapi::public',
+
+
 ];

@@ -4,7 +4,8 @@ dayjs.locale('th');
 
 module.exports = async ({ action, type, message, user, details }) => {
   const now = dayjs();
-  const formattedDate = now.format('D MMM YYYY เวลา HH:mm');
+    const buddhistYear = now.year() + 543;
+
 
   if (!user || !user.id) {
     console.warn('⚠️ ไม่พบข้อมูล user หรือ user.id ใน adminLogHelper:', user);
@@ -15,7 +16,7 @@ module.exports = async ({ action, type, message, user, details }) => {
       data: {
         action,
         type,
-        message: `${message} (บันทึกเมื่อ ${formattedDate})`,
+        message: `${message}`,
         user: user?.id || null,
         timestamp: now.toISOString(),
         details: details || {},

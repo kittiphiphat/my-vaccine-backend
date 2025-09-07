@@ -46,6 +46,7 @@
     "endTime": {
       "type": "string"
     },
+
     "patient": {
       "type": "relation",
       "relation": "manyToOne",

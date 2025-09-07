@@ -1,6 +1,5 @@
 # Strapi + Next.js Setup & Permission Guide
 
----
 
 ## 1. เตรียมเครื่องมือก่อนติดตั้ง
 
@@ -10,7 +9,6 @@
   - หรือ yarn  
 - **Python**: ต้องติดตั้งถ้าใช้ฐานข้อมูล SQLite
 
----
 
 ## 2. สร้างโปรเจกต์ Strapi (v4.25.19) ใหม่ 
 
@@ -26,18 +24,49 @@ Settings -> Users & Permissions plugin-> Roles -> add new role
 -Admin
 -Patient
 Settings -> advanced-settings -> Default role for authenticated users ->Patient
-  
+
+
+config/database.js แก้ไขสำหรับเชื่อมฐานข้อมูล
+
+module.exports = ({ env }) => ({
+  connection: {
+    client: 'mysql',
+    connection: {
+      host: env('DATABASE_HOST', 'localhost'),
+      port: env.int('DATABASE_PORT', 3306),
+      database: env('DATABASE_NAME', 'hospital_vaccine_db'),
+      user: env('DATABASE_USERNAME', 'hospital_admin'),
+      password: env('DATABASE_PASSWORD', '0MedxCmU'),
+    },
+  },
+});
+
+
+
 
 4. ตั้งค่า .env.local สำหรับ Next.js
-env ใช้ run ปกติ
+env 
 NEXT_PUBLIC_STRAPI_URL=http://localhost:1337
 NEXT_PUBLIC_SOCKET_IO_URL=http://localhost:4000
 
-ใช้สำคัญ build docker
-NEXT_PUBLIC_STRAPI_URL=http://strapi:1337
-NEXT_PUBLIC_SOCKET_IO_URL=http://strapi:4000
 
 
+ตัวอย่าง env -backend
+# Database
+DATABASE_CLIENT=mysql
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_NAME=hospital_vaccine_db
+DATABASE_USERNAME=hospital_admin
+DATABASE_PASSWORD=0MedxCmU
+
+
+วิธีสร้าง database (ตัวอย่าง MySQL/MariaDB): สำหรับ localhost
+#sql
+CREATE DATABASE hospital_vaccine_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE USER 'hospital_admin'@'localhost' IDENTIFIED BY '0MedxCmU';
+GRANT ALL PRIVILEGES ON hospital_vaccine_db.* TO 'hospital_admin'@'localhost';
+FLUSH PRIVILEGES;
 
 
 5. การตั้งค่าสิทธิ์ (Permissions) ใน Strapi Admin

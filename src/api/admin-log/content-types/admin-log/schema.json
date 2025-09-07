@@ -30,6 +30,7 @@
         "patient_updated",
         "patient_deleted",
         "hospitel_detail_created",
+        "log_deleted",
         "hospitel_detail_updated",
         "login",
         "logout"
@@ -40,6 +41,7 @@
       "required": false,
       "enum": [
         "create",
+        "system",
         "update",
         "delete",
         "login",

@@ -17,6 +17,7 @@
     "@strapi/strapi": "4.25.19",
     "better-sqlite3": "8.6.0",
     "dayjs": "^1.11.13",
+    "mysql2": "^3.14.3",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^5.3.4",

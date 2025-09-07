@@ -94,7 +94,8 @@
       "enum": [
         "confirmed",
         "cancelled"
-      ]
+      ],
+      "default": "confirmed"
     }
   }
 }

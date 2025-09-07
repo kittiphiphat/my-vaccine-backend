@@ -2,18 +2,19 @@ const dayjs = require('dayjs');
 require('dayjs/locale/th');
 dayjs.locale('th');
 
-module.exports = async ({ action, message, user ,type, details}) => {
+module.exports = async ({ action, message, user, type, details }) => {
   const now = dayjs();
-  const formattedDate = now.format('D MMM YYYY เวลา HH:mm');
+  const buddhistYear = now.year() + 543;
+
 
   await strapi.entityService.create('api::patient-log.patient-log', {
     data: {
-      action,
-      type,
-      message: `${message} (บันทึกเมื่อ ${formattedDate})`,
-      user: user?.id ,
-      timestamp: now.toISOString(),
-      details: details || {},
-    },
+        action,
+        type,
+        message: `${message}`,
+        user: user?.id || null,
+        timestamp: now.toISOString(),
+        details: details || {},
+      },
   });
 };

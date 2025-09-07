@@ -5,99 +5,101 @@ const patientLogHelper = require('../../../utils/patientLogHelper');
 
 module.exports = {
   async login(ctx) {
-  const { identifier, password } = ctx.request.body;
+    const { identifier, password } = ctx.request.body;
 
-  if (!identifier || !password) {
-    return ctx.badRequest('Missing identifier or password');
-  }
-
-  const jwtService = strapi.plugin('users-permissions').service('jwt');
-
-  const user = await strapi.query('plugin::users-permissions.user').findOne({
-    where: {
-      $or: [{ username: identifier }, { email: identifier }],
-    },
-    populate: ['role'],
-  });
-
-  if (!user) {
-    return ctx.unauthorized('Invalid credentials');
-  }
-
-  // เช็คสถานะ ถ้าเป็น cancelled ห้ามล็อกอิน
-  if (user.status === 'cancelled') {
-    return ctx.unauthorized('ไม่สามารถล็อกอินได้ กรุณาสมัครสมาชิกใหม่');
-  }
-
-  const validPassword = await strapi
-    .plugin('users-permissions')
-    .service('user')
-    .validatePassword(password, user.password);
-
-  if (!validPassword) {
-    return ctx.unauthorized('Invalid credentials');
-  }
-
-  const token = await jwtService.issue({ id: user.id });
-
-  ctx.cookies.set('jwt', token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 30 * 24 * 60 * 60 * 1000,
-    path: '/',
-  });
-
-  // Logging (เหมือนเดิม)
-  const roleName = user.role?.name?.toLowerCase() || '';
-  const logDetails = {
-    userId: user.id,
-    username: user.username,
-    email: user.email,
-    role: roleName,
-  };
-
-  try {
-    if (roleName === 'admin') {
-      await adminLogHelper({
-        action: 'login',
-        type: 'login',
-        message: `ผู้ดูแลระบบ ${user.username} ทำการล็อกอิน`,
-        user: { id: user.id },
-        details: logDetails,
-      });
-    } else if (roleName === 'patient') {
-      await patientLogHelper({
-        action: 'login',
-        type: 'login',
-        message: `ผู้ป่วย ${user.username} ทำการล็อกอิน`,
-        user: { id: user.id },
-        details: logDetails,
-      });
-    } else {
-      await adminLogHelper({
-        action: 'login',
-        type: 'login',
-        message: `ผู้ใช้ ${user.username} (role: ${roleName}) ทำการล็อกอิน`,
-        user: { id: user.id },
-        details: logDetails,
-      });
+    if (!identifier || !password) {
+      return ctx.badRequest('Missing identifier or password');
     }
-  } catch (err) {
-    strapi.log.error('Login log error:', err);
-  }
 
-  ctx.body = {
-    message: 'Logged in successfully',
-    user: {
-      id: user.id,
+    const jwtService = strapi.plugin('users-permissions').service('jwt');
+
+    const user = await strapi.query('plugin::users-permissions.user').findOne({
+      where: {
+        $or: [{ username: identifier }, { email: identifier }],
+      },
+      populate: ['role'],
+    });
+
+    if (!user) {
+      return ctx.unauthorized('Invalid credentials');
+    }
+
+    // Check if user is cancelled
+    if (user.status === 'cancelled') {
+      return ctx.unauthorized('ไม่สามารถล็อกอินได้ กรุณาสมัครสมาชิกใหม่');
+    }
+
+    const validPassword = await strapi
+      .plugin('users-permissions')
+      .service('user')
+      .validatePassword(password, user.password);
+
+    if (!validPassword) {
+      return ctx.unauthorized('Invalid credentials');
+    }
+
+    const token = await jwtService.issue({ id: user.id });
+
+    // Dynamically determine if the connection is secure
+    const isSecure = ctx.request.secure || ctx.request.headers['x-forwarded-proto'] === 'https';
+
+    ctx.cookies.set('jwt', token, {
+      httpOnly: true,
+      secure: isSecure, // Use dynamic check instead of NODE_ENV
+      sameSite: 'lax',
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      path: '/',
+    });
+
+    // Logging
+    const roleName = user.role?.name?.toLowerCase() || '';
+    const logDetails = {
+      userId: user.id,
       username: user.username,
       email: user.email,
-      role: user.role,
-    },
-  };
-},
+      role: roleName,
+    };
 
+    try {
+      if (roleName === 'admin') {
+        await adminLogHelper({
+          action: 'login',
+          type: 'login',
+          message: `ผู้ดูแลระบบ ${user.username} ทำการล็อกอิน`,
+          user: { id: user.id },
+          details: logDetails,
+        });
+      } else if (roleName === 'patient') {
+        await patientLogHelper({
+          action: 'login',
+          type: 'login',
+          message: `ผู้ป่วย ${user.username} ทำการล็อกอิน`,
+          user: { id: user.id },
+          details: logDetails,
+        });
+      } else {
+        await adminLogHelper({
+          action: 'login',
+          type: 'login',
+          message: `ผู้ใช้ ${user.username} (role: ${roleName}) ทำการล็อกอิน`,
+          user: { id: user.id },
+          details: logDetails,
+        });
+      }
+    } catch (err) {
+      strapi.log.error('Login log error:', err);
+    }
+
+    ctx.body = {
+      message: 'Logged in successfully',
+      user: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        role: user.role,
+      },
+    };
+  },
 
   async logout(ctx) {
     const token = ctx.cookies.get('jwt');
@@ -110,13 +112,16 @@ module.exports = {
           populate: ['role'],
         });
       } catch (err) {
-
+        strapi.log.error('JWT verification error:', err);
       }
     }
 
+    // Dynamically determine if the connection is secure
+    const isSecure = ctx.request.secure || ctx.request.headers['x-forwarded-proto'] === 'https';
+
     ctx.cookies.set('jwt', null, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: isSecure, // Use dynamic check instead of NODE_ENV
       sameSite: 'lax',
       maxAge: 0,
       path: '/',

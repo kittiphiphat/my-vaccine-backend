@@ -9,10 +9,9 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
     const user = ctx.state.user;
     const { day_of_week, vaccine } = ctx.request.body.data || ctx.request.body;
 
-    // ตรวจสอบว่ามีวันให้บริการนี้กับวัคซีนนี้แล้วหรือยัง
     const existing = await strapi.db.query('api::vaccine-service-day.vaccine-service-day').findOne({
       where: {
-        day_of_week: { $in: day_of_week }, // ✅ ใช้ $in เพราะเป็น array
+        day_of_week: { $in: day_of_week },
         vaccine: vaccine?.id || vaccine,
       },
     });
@@ -21,7 +20,6 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
       return ctx.badRequest('ไม่สามารถเพิ่มวันให้บริการนี้ได้ เพราะมีอยู่แล้ว');
     }
 
-    // สร้างวันให้บริการ
     const response = await strapi.service('api::vaccine-service-day.vaccine-service-day').create({
       data: {
         day_of_week,
@@ -36,7 +34,7 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
     await adminLogHelper({
       action: 'vaccine_service_day_created',
       type: 'create',
-      message: `แอดมิน ${user?.username} สร้างวันให้บริการวัคซีน "${vaccineTitle}" (ID ${created.id})`,
+      message: `แอดมิน ${user?.username} สร้างวันให้บริการวัคซีน ${vaccineTitle} (ID ${created.id})`,
       user: { id: user?.id },
       details: {
         after: created,
@@ -45,7 +43,6 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
 
     return response;
   },
-
 
   async update(ctx) {
     const user = ctx.state.user;
@@ -70,7 +67,7 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
     await adminLogHelper({
       action: 'vaccine_service_day_updated',
       type: 'update',
-      message: `แอดมิน ${user?.username} แก้ไขวันให้บริการวัคซีน "${vaccineTitle}" (ID ${id})`,
+      message: `แอดมิน ${user?.username} แก้ไขวันให้บริการวัคซีน ${vaccineTitle} (ID ${id})`,
       user: { id: user?.id },
       details: {
         before: existing,
@@ -100,7 +97,7 @@ module.exports = createCoreController('api::vaccine-service-day.vaccine-service-
     await adminLogHelper({
       action: 'vaccine_service_day_deleted',
       type: 'delete',
-      message: `แอดมิน ${user?.username} ลบวันให้บริการวัคซีน "${vaccineTitle}" (ID ${id})`,
+      message: `แอดมิน ${user?.username} ลบวันให้บริการวัคซีน ${vaccineTitle} (ID ${id})`,
       user: { id: user?.id },
       details: {
         before: existing,

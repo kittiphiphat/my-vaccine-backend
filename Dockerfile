@@ -1,23 +1,26 @@
 FROM node:18-bullseye
 
-# ติดตั้ง dependencies ที่จำเป็นสำหรับ build native modules เช่น sharp
-RUN apt-get update && apt-get install -y \
-  build-essential \
-  python3 \
-  make \
-  g++ \
-  git \
-  libvips-dev \
-  && rm -rf /var/lib/apt/lists/*
+# ติดตั้ง dependencies สำหรับ native modules
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    python3 \
+    make \
+    g++ \
+    git \
+    libvips-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /opt/app
 
-# copy package files แล้วติดตั้งก่อน (แยก layer)
-COPY package.json package-lock.json ./
-RUN npm install
+# copy package files และติดตั้ง dependencies
+COPY package*.json ./
+RUN npm install --omit=dev && npm cache clean --force
 
-# copy source ทั้งหมด
+# copy source code ทั้งหมด
 COPY . .
+
+# ลบ cache ของ node_modules ถ้ามี
+RUN rm -rf node_modules/.cache
 
 EXPOSE 1337
 
