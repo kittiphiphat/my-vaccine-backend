@@ -52,13 +52,24 @@ NEXT_PUBLIC_SOCKET_IO_URL=http://localhost:4000
 
 
 ตัวอย่าง env -backend
+HOST=0.0.0.0
+PORT=1337
+APP_KEYS=0u10gYbAfJuf+y6TXHlPwg==,zqkC+fkN/iLWtquhcMe0aw==,Gkp1pKufarVqf3fJQRLQgQ==,FI/82N/UU7c2qy+6B7KXLg==
+API_TOKEN_SALT=MityhsJObHaHqSeuAzKcqg==
+ADMIN_JWT_SECRET=6jDIm04zw38X+y2dCOijXw==
+TRANSFER_TOKEN_SALT=vSHFtTXqYG2mGC1Pcutlcg==
+JWT_SECRET=olE5M1PMrgQ4mEqRRLZYsQ==
 # Database
 DATABASE_CLIENT=mysql
-DATABASE_HOST=localhost
+DATABASE_HOST=mysql
 DATABASE_PORT=3306
 DATABASE_NAME=hospital_vaccine_db
 DATABASE_USERNAME=hospital_admin
 DATABASE_PASSWORD=0MedxCmU
+DATABASE_SSL=false
+DATABASE_TIMEZONE=Asia/Bangkok
+SOCKET_IO_PORT=4000
+NODE_ENV=development
 
 
 วิธีสร้าง database (ตัวอย่าง MySQL/MariaDB): สำหรับ localhost
