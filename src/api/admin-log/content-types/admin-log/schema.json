@@ -1,0 +1,73 @@
+{
+  "kind": "collectionType",
+  "collectionName": "admin_logs",
+  "info": {
+    "singularName": "admin-log",
+    "pluralName": "admin-logs",
+    "displayName": "Admin Log",
+    "description": "Logs for admin activities"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "action": {
+      "type": "string",
+      "required": true,
+      "enum": [
+        "vaccine_created",
+        "vaccine_updated",
+        "vaccine_deleted",
+        "booking_setting_created",
+        "booking_setting_updated",
+        "booking_setting_deleted",
+        "vaccine_time_slot_created",
+        "vaccine_time_slot_updated",
+        "vaccine_time_slot_deleted",
+        "vaccine_service_day_created",
+        "vaccine_service_day_updated",
+        "vaccine_service_day_deleted",
+        "patient_updated",
+        "patient_deleted",
+        "hospitel_detail_created",
+        "log_deleted",
+        "hospitel_detail_updated",
+        "login",
+        "logout"
+      ]
+    },
+    "type": {
+      "type": "string",
+      "required": false,
+      "enum": [
+        "create",
+        "system",
+        "update",
+        "delete",
+        "login",
+        "logout"
+      ]
+    },
+    "message": {
+      "type": "text",
+      "required": true
+    },
+    "timestamp": {
+      "type": "datetime",
+      "required": true,
+      "default": {
+        "$dbFunction": "now"
+      }
+    },
+    "details": {
+      "type": "json",
+      "required": false
+    },
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "admin_logs"
+    }
+  }
+}

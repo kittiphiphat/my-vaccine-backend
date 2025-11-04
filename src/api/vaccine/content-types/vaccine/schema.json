@@ -1,0 +1,83 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vaccines",
+  "info": {
+    "singularName": "vaccine",
+    "pluralName": "vaccines",
+    "displayName": "vaccine",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "richtext"
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "male",
+        "female",
+        "any"
+      ]
+    },
+    "minAge": {
+      "type": "integer"
+    },
+    "maxAge": {
+      "type": "integer"
+    },
+    "maxQuota": {
+      "type": "integer"
+    },
+    "booked": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "useTimeSlots": {
+      "type": "boolean"
+    },
+    "serviceStartTime": {
+      "type": "time"
+    },
+    "serviceEndTime": {
+      "type": "time"
+    },
+    "vaccine_bookings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::vaccine-booking.vaccine-booking",
+      "mappedBy": "vaccine"
+    },
+    "vaccine_service_days": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::vaccine-service-day.vaccine-service-day",
+      "mappedBy": "vaccine"
+    },
+    "vaccine_time_slots": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::vaccine-time-slot.vaccine-time-slot",
+      "mappedBy": "vaccine"
+    },
+    "booking_settings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::booking-setting.booking-setting",
+      "mappedBy": "vaccine"
+    },
+    "bookingStartDate": {
+      "type": "date"
+    },
+    "bookingEndDate": {
+      "type": "date"
+    }
+  }
+}

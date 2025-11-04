@@ -1,0 +1,65 @@
+{
+  "kind": "collectionType",
+  "collectionName": "patients",
+  "info": {
+    "singularName": "patient",
+    "pluralName": "patients",
+    "displayName": "Patient",
+    "description": "Patient information"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "first_name": {
+      "type": "string",
+      "required": true
+    },
+    "last_name": {
+      "type": "string",
+      "required": true
+    },
+    "birth_date": {
+      "type": "date",
+      "required": true
+    },
+    "phone": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "gender": {
+      "type": "enumeration",
+      "enum": [
+        "male",
+        "female",
+        "other"
+      ]
+    },
+    "email": {
+      "type": "string",
+      "required": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "patient"
+    },
+    "vaccine_bookings": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::vaccine-booking.vaccine-booking",
+      "mappedBy": "patient"
+    },
+    "status": {
+      "type": "enumeration",
+      "enum": [
+        "confirmed",
+        "cancelled"
+      ],
+      "default": "confirmed"
+    }
+  }
+}

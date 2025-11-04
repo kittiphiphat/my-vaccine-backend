@@ -1,0 +1,25 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vaccine_service_days",
+  "info": {
+    "singularName": "vaccine-service-day",
+    "pluralName": "vaccine-service-days",
+    "displayName": "vaccine-service-day",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "day_of_week": {
+      "type": "json"
+    },
+   "vaccine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vaccine.vaccine",
+      "inversedBy": "vaccine_service_days"
+    }
+  }
+}

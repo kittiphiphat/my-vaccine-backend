@@ -1,0 +1,26 @@
+
+services:
+  strapi:
+    build:
+      context: ./my-vaccine-backend
+    image: my-vaccine-backend:${BACKEND_VERSION}
+    container_name: strapi_hospital
+    env_file:
+      - .env.compose      
+      - ./my-vaccine-backend/.env  
+    volumes:
+      - ./my-vaccine-backend:/app
+      - ./my-vaccine-backend/app-data:/app/.tmp
+    ports:
+      - "${STRAPI_PORT}:1337"
+      - "${SOCKET_PORT}:4000"
+    restart: unless-stopped
+    networks:
+      - app-network
+    environment:
+      TZ: ${TZ}
+      NODE_ENV: production
+
+networks:
+  app-network:
+    external: true

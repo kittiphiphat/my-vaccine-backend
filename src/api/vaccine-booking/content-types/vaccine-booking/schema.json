@@ -1,0 +1,64 @@
+{
+  "kind": "collectionType",
+  "collectionName": "vaccine_bookings",
+  "info": {
+    "singularName": "vaccine-booking",
+    "pluralName": "vaccine-bookings",
+    "displayName": "Vaccine Booking",
+    "description": "Vaccine booking details"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "attributes": {
+    "bookingDate": {
+      "type": "date"
+    },
+    "booking_status": {
+      "type": "enumeration",
+      "enum": [
+        "confirmed",
+        "cancelled"
+      ],
+      "default": "confirmed"
+    },
+    "vaccination_status": {
+      "type": "enumeration",
+      "enum": [
+        "not_started",
+        "vaccinated"
+      ],
+      "default": "not_started"
+    },
+    "users_permissions_user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "vaccine_bookings"
+    },
+    "vaccine_time_slot": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vaccine-time-slot.vaccine-time-slot",
+      "inversedBy": "vaccine_bookings"
+    },
+    "vaccine": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::vaccine.vaccine",
+      "inversedBy": "vaccine_bookings"
+    },
+    "startTime": {
+      "type": "string"
+    },
+    "endTime": {
+      "type": "string"
+    },
+    "patient": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::patient.patient",
+      "inversedBy": "vaccine_bookings"
+    }
+  }
+}
